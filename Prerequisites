@@ -1,0 +1,8 @@
+VPC must have DNS support enabled, for details see here: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-dns.html
+Linux instances must have the curl package installed (normally installed by default).
+A security group on the Trend VPC interface endpoint must allow required inbound accesses for port 443, 4120, 4122, 5275, 8443. (The source must be the VPC IP range.) 
+A security group must allow all these ports outbound as well. (The destination must be the SG itself.)
+If there's an external NLB/ALB, it should listen on the same ports too.
+Private Route53 hosted zone for the given VPC for yoururl.com must exist - this will set custom DNS in the VPC which will resolve Trend Micro requests from the agent to the DNS of the Trend Micro VPC endpoint
+If SSM is used: Endpoints for regional AWS services (SSM & EC2Messages) with permissive security group - this will allow commands to be run on servers which will handle agent installation without exposing instances to internet.
+An IAM role attached to the instance which has the following AWS-managed policy attached: arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM - this provides the instance with required permissions to work with AWS SSM.
